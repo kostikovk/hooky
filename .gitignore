@@ -1,0 +1,33 @@
+# Ignore Go binary files
+bin/
+*.exe
+*.out
+*.log
+
+# Ignore Go build artifacts
+*.a
+*.test
+*.tmp
+
+# Ignore IDE/editor specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-project
+*.sublime-workspace
+
+# Ignore OS specific files
+.DS_Store
+Thumbs.db
+
+# Ignore build directories and artifacts
+build/
+dist/
+out/
+
+# Ignore local environment files
+.env
+*.local
+
+# Do not ignore GoHooks specific files (include .gohooks/)
