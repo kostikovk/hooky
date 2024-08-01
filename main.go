@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/KosKosovu4/gohooks/cmd"
+	"github.com/2kse/gohooks/cmd"
 )
 
 func main() {

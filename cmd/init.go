@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/KosKosovu4/gohooks/lib"
+	"github.com/2kse/gohooks/lib"
 	"github.com/spf13/cobra"
 )
 

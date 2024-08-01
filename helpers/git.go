@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 )
 
 // List of Git hooks.
@@ -82,6 +83,24 @@ func PromptToInitGit() error {
 	return nil
 }
 
+// PromptToCopyGitHooksToGoHooks prompts the user to copy Git hooks to GoHooks repository.
+func PromptToCopyGitHooksToGoHooks() error {
+	fmt.Println("Would you like to copy Git hooks to GoHooks repository?")
+	fmt.Print("Y/n: ")
+
+	var response string
+	_, err := fmt.Scanln(&response)
+	if err != nil {
+		return fmt.Errorf("Failed to read response: %w", err)
+	}
+
+	if response == "Y" || response == "y" {
+		return CopyGitHooksToGoHooks()
+	}
+
+	return nil
+}
+
 // Delete .git/hooks folder with all its contents.
 func DeleteGitHooksDirectory() error {
 	return os.RemoveAll(AbsoluteGitHooksPath)
@@ -94,11 +113,37 @@ func HasGitHooks() bool {
 		return false
 	}
 
+	hasGitHook := false
 	for _, file := range files {
-		if GitHookExists(file.Name()) {
-			return true
+		if !strings.HasSuffix(file.Name(), ".sample") {
+			hasGitHook = true
+			break
 		}
 	}
 
-	return false
+	return hasGitHook
+}
+
+// CopyGitHooksToGoHooks copies Git hooks to GoHooks repository.
+func CopyGitHooksToGoHooks() error {
+	files, err := os.ReadDir(AbsoluteGitHooksPath)
+	if err != nil {
+		return fmt.Errorf("Failed to read .git/hooks directory: %w", err)
+	}
+
+	for _, file := range files {
+		if strings.HasSuffix(file.Name(), ".sample") {
+			continue
+		}
+
+		pathFrom := fmt.Sprintf("%s/%s", AbsoluteGitHooksPath, file.Name())
+		pathTo := fmt.Sprintf("%s/%s", AbsoluteGoHooksGitHooksPath, file.Name())
+
+		err := copyFile(pathFrom, pathTo)
+		if err != nil {
+			return fmt.Errorf("Failed to copy Git hook %s to GoHooks: %w", file.Name(), err)
+		}
+	}
+
+	return nil
 }

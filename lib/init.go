@@ -3,7 +3,7 @@ package lib
 import (
 	"os"
 
-	"github.com/KosKosovu4/gohooks/helpers"
+	"github.com/2kse/gohooks/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -12,21 +12,33 @@ func RunInit(cmd *cobra.Command, args []string) {
 
 	var err error
 
-	err = gitHandler(cmd)
+	// Initialize or ask to initialize Git repository
+	err = initGit(cmd)
 	if err != nil {
+		cmd.Println("Error initializing Git repository.")
+
 		os.Exit(1)
+	} else {
+		cmd.Println("Git repository initialized.")
 	}
 
-	err = gohooksHandler(cmd)
+	// Initialize GoHooks repository
+	err = initGoHooks()
 	if err != nil {
+		cmd.Println("Error initializing GoHooks repository.")
+
 		os.Exit(1)
+	} else {
+		cmd.Println("GoHooks repository initialized.")
 	}
+
+	// Copy Git hooks to GoHooks repository after prompting the user to do so
+	// This is optional and can be skipped by the user if they don't want to copy Git hooks
+	copyGitHooksToGoHooks()
 }
 
-func gitHandler(cmd *cobra.Command) error {
+func initGit(cmd *cobra.Command) error {
 	if helpers.IsGitRepository() {
-		cmd.Println("Git already initialized.")
-
 		return nil
 	}
 
@@ -37,28 +49,28 @@ func gitHandler(cmd *cobra.Command) error {
 		return err
 	}
 
-	cmd.Println("Git repository initialized.")
-
 	return nil
 }
 
-func gohooksHandler(cmd *cobra.Command) error {
+func initGoHooks() error {
 	// Check if GoHooks repository already exists
 	if helpers.IsGoHooksRepository() {
-		cmd.Println("GoHooks already initialized.")
-
 		return nil
 	}
 
 	// Create GoHooks repository
 	err := helpers.CreateGoHooksGitDirectory()
 	if err != nil {
-		cmd.Println("Error creating GoHooks repository.")
-
 		return err
 	}
 
-	cmd.Println("GoHooks repository initialized.")
-
 	return nil
+}
+
+func copyGitHooksToGoHooks() error {
+	if !helpers.HasGitHooks() {
+		return nil
+	}
+
+	return helpers.PromptToCopyGitHooksToGoHooks()
 }

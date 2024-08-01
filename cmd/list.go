@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/KosKosovu4/gohooks/helpers"
+	"github.com/2kse/gohooks/helpers"
 	"github.com/spf13/cobra"
 )
 
