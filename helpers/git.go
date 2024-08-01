@@ -2,6 +2,7 @@ package helpers
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 )
 
@@ -28,6 +29,9 @@ var GitHooks = []string{
 	"update",
 }
 
+var AbsoluteGitPath = getAbsolutePath(".git")
+var AbsoluteGitHooksPath = getAbsolutePath(".git/hooks")
+
 // GitHookExists checks if a Git hook exists.
 func GitHookExists(hook string) bool {
 	for _, h := range GitHooks {
@@ -41,12 +45,12 @@ func GitHookExists(hook string) bool {
 
 // IsGitRepository checks if the current directory is a Git repository.
 func IsGitRepository() bool {
-	return dirExists(".git")
+	return dirExists(AbsoluteGitPath)
 }
 
 // HasGitHooksDirectory checks if the current directory has a .git/hooks folder.
 func HasGitHooksDirectory() bool {
-	return dirExists(".git/hooks")
+	return dirExists(AbsoluteGitHooksPath)
 }
 
 // InitGit initializes a Git repository.
@@ -76,4 +80,25 @@ func PromptToInitGit() error {
 	}
 
 	return nil
+}
+
+// Delete .git/hooks folder with all its contents.
+func DeleteGitHooksDirectory() error {
+	return os.RemoveAll(AbsoluteGitHooksPath)
+}
+
+// Check if .git/hooks has some hooks.
+func HasGitHooks() bool {
+	files, err := os.ReadDir(AbsoluteGitHooksPath)
+	if err != nil {
+		return false
+	}
+
+	for _, file := range files {
+		if GitHookExists(file.Name()) {
+			return true
+		}
+	}
+
+	return false
 }

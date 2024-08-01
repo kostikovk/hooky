@@ -9,9 +9,7 @@ var initCmd = &cobra.Command{
 	Use:   "init",
 	Short: "Init GoHooks CLI",
 	Long:  `Init GoHooks CLI...`,
-	Run: func(cmd *cobra.Command, args []string) {
-		lib.Init()
-	},
+	Run:   lib.RunInit,
 }
 
 func init() {
