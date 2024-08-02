@@ -7,7 +7,7 @@ import (
 )
 
 var AbsoluteGoHooksPath = getAbsolutePath(".gohooks")
-var AbsoluteGoHooksGitHooksPath = getAbsolutePath(".gohooks/git/hooks")
+var AbsoluteGoHooksGitHooksPath = getAbsolutePath(".gohooks/hooks")
 
 // IsGoHooksRepository checks if the current directory is a GoHooks repository.
 func IsGoHooksRepository() bool {
