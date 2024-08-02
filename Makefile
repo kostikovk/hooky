@@ -41,6 +41,10 @@ lint:
 doc:
 	godoc -http :8080
 
+# Pre commit hook
+.PHONY: pre-commit
+pre-commit: fmt lint build test
+
 # Show help
 .PHONY: help
 help:
