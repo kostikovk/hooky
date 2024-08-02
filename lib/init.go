@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// RunInit initializes GoHooks.
 func RunInit(cmd *cobra.Command, args []string) {
 	cmd.Println("Initializing GoHooks...")
 
@@ -18,8 +19,6 @@ func RunInit(cmd *cobra.Command, args []string) {
 		cmd.Println("Error initializing Git repository.")
 
 		os.Exit(1)
-	} else {
-		cmd.Println("Git repository initialized.")
 	}
 
 	// Initialize GoHooks repository
@@ -28,15 +27,19 @@ func RunInit(cmd *cobra.Command, args []string) {
 		cmd.Println("Error initializing GoHooks repository.")
 
 		os.Exit(1)
-	} else {
-		cmd.Println("GoHooks repository initialized.")
 	}
 
-	// Copy Git hooks to GoHooks repository after prompting the user to do so
-	// This is optional and can be skipped by the user if they don't want to copy Git hooks
-	copyGitHooksToGoHooks()
+	err = helpers.InstallHooks()
+	if err != nil {
+		cmd.Println("Error installing hooks.")
+
+		os.Exit(1)
+	}
+
+	cmd.Println("GoHooks initialized.")
 }
 
+// Initialize or ask to initialize Git repository.
 func initGit(cmd *cobra.Command) error {
 	if helpers.IsGitRepository() {
 		return nil
@@ -52,6 +55,7 @@ func initGit(cmd *cobra.Command) error {
 	return nil
 }
 
+// Initialize GoHooks repository.
 func initGoHooks() error {
 	// Check if GoHooks repository already exists
 	if helpers.IsGoHooksRepository() {
@@ -64,13 +68,11 @@ func initGoHooks() error {
 		return err
 	}
 
-	return nil
-}
-
-func copyGitHooksToGoHooks() error {
-	if !helpers.HasGitHooks() {
-		return nil
+	// Create pre-commit hook
+	err = helpers.CreateGitHook("pre-commit", "# go test ./...")
+	if err != nil {
+		return err
 	}
 
-	return helpers.PromptToCopyGitHooksToGoHooks()
+	return nil
 }

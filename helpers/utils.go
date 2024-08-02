@@ -2,7 +2,6 @@ package helpers
 
 import (
 	"fmt"
-	"io"
 	"os"
 )
 
@@ -26,45 +25,37 @@ func getAbsolutePath(path string) string {
 	return wd + "/" + path
 }
 
-// contains checks if a slice contains a string.
-func contains(arr []string, str string) bool {
+// Contains checks if a slice contains an element based on the provided comparison function.
+func Contains[T any](arr []T, compare func(T) bool) bool {
 	for _, a := range arr {
-		if a == str {
+		if compare(a) {
 			return true
 		}
 	}
-
 	return false
 }
 
-// copyFile copies a file from pathFrom to pathTo.
-// It returns an error if the copy operation fails.
-func copyFile(pathFrom, pathTo string) error {
-	// Open the source file
-	srcFile, err := os.Open(pathFrom)
-	if err != nil {
-		return fmt.Errorf("failed to open source file: %w", err)
-	}
-	defer srcFile.Close()
+// ContainsFile checks if a slice of FileInfo contains a file with the given name.
+func ContainsFile(arr []os.DirEntry, fileName string) bool {
+	return Contains(arr, func(f os.DirEntry) bool {
+		return f.Name() == fileName
+	})
+}
 
-	// Create the destination file
-	destFile, err := os.Create(pathTo)
-	if err != nil {
-		return fmt.Errorf("failed to create destination file: %w", err)
-	}
-	defer destFile.Close()
+// Prompt asks the user for input y/n and return error or nil.
+func Prompt(prompt string) error {
+	fmt.Println(prompt)
+	fmt.Print("Y/n: ")
 
-	// Copy the contents of the source file to the destination file
-	_, err = io.Copy(destFile, srcFile)
+	var response string
+	_, err := fmt.Scanln(&response)
 	if err != nil {
-		return fmt.Errorf("failed to copy file: %w", err)
+		return fmt.Errorf("failed to read response: %w", err)
 	}
 
-	// Flush the file writer to ensure all data is written to disk
-	err = destFile.Sync()
-	if err != nil {
-		return fmt.Errorf("failed to flush file writer: %w", err)
+	if response == "Y" || response == "y" {
+		return nil
 	}
 
-	return nil
+	return fmt.Errorf(response)
 }

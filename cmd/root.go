@@ -12,7 +12,10 @@ var rootCmd = &cobra.Command{
 	Short: "GoHooks CLI",
 	Long:  `GoHooks CLI helps you to work with git hooks easily.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Help()
+		err := cmd.Help()
+		if err != nil {
+			panic(err)
+		}
 	},
 }
 
