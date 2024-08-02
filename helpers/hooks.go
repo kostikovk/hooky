@@ -14,14 +14,9 @@ func IsGoHooksRepository() bool {
 	return dirExists(AbsoluteGoHooksPath)
 }
 
-// HasGoHooksGitDirectory checks if the current directory has a .gohooks/git folder.
-func HasGoHooksGitDirectory() bool {
-	return dirExists(AbsoluteGoHooksGitHooksPath)
-}
-
 // CreateGoHooksGitDirectory creates a .gohooks/git/hooks folder.
 func CreateGoHooksGitDirectory() error {
-	return os.MkdirAll(AbsoluteGoHooksGitHooksPath, 0755)
+	return os.MkdirAll(AbsoluteGoHooksGitHooksPath, 0750)
 }
 
 // DeleteGoHooksDirectory .gohooks directory
@@ -83,7 +78,7 @@ func InstallHooks() error {
 		return fmt.Errorf("failed to delete Git hooks directory: %w", err)
 	}
 
-	err = os.MkdirAll(AbsoluteGitHooksPath, 0755)
+	err = os.MkdirAll(AbsoluteGitHooksPath, 0750)
 	if err != nil {
 		return fmt.Errorf("failed to create Git hooks directory: %w", err)
 	}
@@ -102,7 +97,7 @@ func InstallHooks() error {
 		}
 
 		// make hook executable.
-		err = os.Chmod(filepath.Join(AbsoluteGitHooksPath, hook.Name()), 0755)
+		err = os.Chmod(filepath.Join(AbsoluteGitHooksPath, hook.Name()), 0750)
 		if err != nil {
 			return fmt.Errorf("failed to change file permissions: %w", err)
 		}
