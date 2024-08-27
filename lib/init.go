@@ -3,7 +3,7 @@ package lib
 import (
 	"os"
 
-	"github.com/2kse/gohooks/helpers"
+	"github.com/kostikovk/gohooks/helpers"
 	"github.com/spf13/cobra"
 )
 
