@@ -8,7 +8,7 @@ all: build
 # Build the application
 .PHONY: build
 build:
-	go build -o bin/$(BINARY_NAME)
+	CGO_ENABLED=0 go build -ldflags="-s -w" -o bin/$(BINARY_NAME)
 
 # Run tests
 .PHONY: test
