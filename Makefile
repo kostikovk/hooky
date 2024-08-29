@@ -24,7 +24,7 @@ clean:
 # Run the application
 .PHONY: run
 run: build
-	./bin/$(BINARY_NAME)
+	./bin/$(BINARY_NAME) $(RUN_ARGS)
 
 # Format code
 .PHONY: fmt
