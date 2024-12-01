@@ -36,7 +36,7 @@ func RunInit(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	cmd.Println("GoHooks initialized.")
+	cmd.Println("Hooky initialized 🎉")
 }
 
 // Initialize or ask to initialize Git repository.
