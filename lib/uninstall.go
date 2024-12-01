@@ -1,7 +1,7 @@
 package lib
 
 import (
-	"github.com/kostikovk/gohooks/helpers"
+	"github.com/kostikovk/hooky/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -15,11 +15,11 @@ func RunUninstall(cmd *cobra.Command, args []string) {
 }
 
 func gohooksUninstallHandler(cmd *cobra.Command) error {
-	if !helpers.IsGoHooksRepository() {
+	if !helpers.IsHookyRepository() {
 		return nil
 	}
 
-	err := helpers.DeleteGoHooksDirectory()
+	err := helpers.DeleteHookyDirectory()
 	if err != nil {
 		cmd.Println("Error deleting GoHooks repository.")
 

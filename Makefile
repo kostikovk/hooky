@@ -1,5 +1,5 @@
 # Define the name of the binary
-BINARY_NAME := gohooks
+BINARY_NAME := hooky
 
 # Define the default target
 .PHONY: all

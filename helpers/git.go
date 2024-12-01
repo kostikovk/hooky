@@ -65,9 +65,9 @@ func PromptToInitGit() error {
 	return Prompt("This is not a Git repository. Would you like to initialize it?")
 }
 
-// PromptToCopyGitHooksToGoHooks prompts the user to copy Git hooks to GoHooks repository.
-func PromptToCopyGitHooksToGoHooks() error {
-	return Prompt("Would you like to copy Git hooks to GoHooks repository?")
+// PromptToCopyGitHooksToHooky prompts the user to copy Git hooks to Hooky repository.
+func PromptToCopyGitHooksToHooky() error {
+	return Prompt("Would you like to copy Git hooks to Hooky repository?")
 }
 
 // DeleteGitHooksDirectory .git/hooks folder with all its contents.

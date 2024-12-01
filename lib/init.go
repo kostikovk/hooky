@@ -3,7 +3,7 @@ package lib
 import (
 	"os"
 
-	"github.com/kostikovk/gohooks/helpers"
+	"github.com/kostikovk/hooky/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -21,8 +21,8 @@ func RunInit(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	// Initialize GoHooks repository
-	err = initGoHooks()
+	// Initialize Hooky repository
+	err = isHookyRepository()
 	if err != nil {
 		cmd.Println("Error initializing GoHooks repository.")
 
@@ -56,14 +56,14 @@ func initGit(cmd *cobra.Command) error {
 }
 
 // Initialize GoHooks repository.
-func initGoHooks() error {
-	// Check if GoHooks repository already exists
-	if helpers.IsGoHooksRepository() {
+func isHookyRepository() error {
+	// Check if Hooky repository already exists
+	if helpers.IsHookyRepository() {
 		return nil
 	}
 
-	// Create GoHooks repository
-	err := helpers.CreateGoHooksGitDirectory()
+	// Create Hooky repository
+	err := helpers.CreateHookyGitDirectory()
 	if err != nil {
 		return err
 	}
