@@ -22,7 +22,7 @@ func RunInit(cmd *cobra.Command, args []string) {
 	}
 
 	// Initialize Hooky repository
-	err = isHookyRepository()
+	err = initHooky()
 	if err != nil {
 		cmd.Println("Error initializing GoHooks repository.")
 
@@ -55,8 +55,8 @@ func initGit(cmd *cobra.Command) error {
 	return nil
 }
 
-// Initialize GoHooks repository.
-func isHookyRepository() error {
+// Initialize Hooky repository.
+func initHooky() error {
 	// Check if Hooky repository already exists
 	if helpers.IsHookyRepository() {
 		return nil
