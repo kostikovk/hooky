@@ -1,4 +1,4 @@
-# Hooky CLI [WIP]
+# Hooky CLI
 
 **Hooky CLI** is a command-line tool for managing Git hooks in Go projects. Designed with simplicity and efficiency in mind, Hooky makes it easy to set up, configure, and run Git hooks such as pre-commit, pre-push, and more. Whether you’re enforcing coding standards, running tests, or automating tasks, Hooky streamlines the process in a Go-centric development workflow.
 
@@ -32,3 +32,12 @@ hooky install pre-commit
 ```
 This command installs the `pre-commit` hook in your Git repository.
 If it's already installed, it will overwrite the existing hook.
+
+## Contributing
+Contributions are welcome! To contribute:
+1. Fork the repository.
+2. Create a new branch for your feature or bugfix.
+3. Submit a pull request with a clear description of your changes.
+
+## License
+This project is licensed under the MIT License - see the [LICENSE.md](./LICENSE.md) file for details.
