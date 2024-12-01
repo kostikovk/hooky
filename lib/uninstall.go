@@ -6,7 +6,7 @@ import (
 )
 
 func RunUninstall(cmd *cobra.Command, args []string) {
-	err := gohooksUninstallHandler(cmd)
+	err := hookyUninstallHandler(cmd)
 	if err != nil {
 		cmd.Println("Error uninstalling GoHooks.")
 	}
@@ -14,7 +14,7 @@ func RunUninstall(cmd *cobra.Command, args []string) {
 	cmd.Println("GoHooks uninstalled.")
 }
 
-func gohooksUninstallHandler(cmd *cobra.Command) error {
+func hookyUninstallHandler(cmd *cobra.Command) error {
 	if !helpers.IsHookyRepository() {
 		return nil
 	}
