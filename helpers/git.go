@@ -44,11 +44,6 @@ func IsGitRepository() bool {
 	return dirExists(AbsoluteGitPath)
 }
 
-// HasGitHooksDirectory checks if the current directory has a .git/hooks folder.
-func HasGitHooksDirectory() bool {
-	return dirExists(AbsoluteGitHooksPath)
-}
-
 // InitGit initializes a Git repository.
 func InitGit() error {
 	cmd := exec.Command("git", "init")

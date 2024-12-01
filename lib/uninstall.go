@@ -11,7 +11,7 @@ func RunUninstall(cmd *cobra.Command, args []string) {
 		cmd.Println("Error uninstalling GoHooks.")
 	}
 
-	cmd.Println("GoHooks uninstalled.")
+	cmd.Println("Hooky uninstalled :(")
 }
 
 func hookyUninstallHandler(cmd *cobra.Command) error {

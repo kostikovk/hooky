@@ -8,7 +8,7 @@ import (
 )
 
 // Version is the version of the CLI.
-var Version string = "v0.0.1"
+const Version string = "v1.0.0"
 
 var versionCmd = &cobra.Command{
 	Use:   "version",

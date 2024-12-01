@@ -14,6 +14,10 @@ func IsHookyRepository() bool {
 	return dirExists(AbsoluteHookyPath)
 }
 
+func HasGitHooksDirectory() bool {
+	return dirExists(AbsoluteHookyGitHooksPath)
+}
+
 // CreateHookyGitDirectory creates a .hooky/ folder.
 func CreateHookyGitDirectory() error {
 	return os.MkdirAll(AbsoluteHookyGitHooksPath, 0750)
@@ -26,12 +30,27 @@ func DeleteHookyDirectory() error {
 
 // CreateGitHook creates a Hooky Git hook.
 func CreateGitHook(hook string, cmd string) error {
+	// check if Hooky repository exists.
+	if !IsHookyRepository() {
+		fmt.Println("Hooky repository not found")
+		fmt.Println("Please, do 'hooky init' to create a Hooky repository")
+
+		return fmt.Errorf("Hooky repository not found")
+	}
+
+	if !HasGitHooksDirectory() {
+		fmt.Println("Git hooks directory not found in Hooky repository '.hooky/git-hooks'")
+		fmt.Println("Please, do 'hooky uninstall' and 'hooky init' to create a Hooky repository again")
+
+		return fmt.Errorf("Git hooks directory not found in Hooky repository '.hooky/git-hooks'")
+	}
+
 	// check if hook is valid Git hook.
 	if !GitHookExists(hook) {
 		return fmt.Errorf("invalid Git hook: %s", hook)
 	}
 
-	// check if GoHooks Git directory exists.
+	// check if Hooky Git directory exists.
 	files, err := os.ReadDir(AbsoluteHookyGitHooksPath)
 	if err != nil {
 		return fmt.Errorf("failed to read directory: %w", err)
