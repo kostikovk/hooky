@@ -5,12 +5,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// Whant to implement:
-// 1. Show all available hooks
-// 2. Show all hooks that are installed
-// 3. Show all hooks that are not installed
-// 4. Ask a user about installing a hook
-
 func RunList(cmd *cobra.Command, args []string) {
 	installed, _ := cmd.Flags().GetBool("installed")
 
