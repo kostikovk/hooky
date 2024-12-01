@@ -8,9 +8,9 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "gohooks",
-	Short: "GoHooks CLI",
-	Long:  `GoHooks CLI helps you to work with git hooks easily.`,
+	Use:   "hooky",
+	Short: "Hooky CLI",
+	Long:  `Hooky CLI helps you to work with git hooks easily.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		err := cmd.Help()
 		if err != nil {

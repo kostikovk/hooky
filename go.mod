@@ -1,4 +1,4 @@
-module github.com/kostikovk/gohooks
+module github.com/kostikovk/hooky
 
 go 1.22.4
 

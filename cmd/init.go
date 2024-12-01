@@ -1,14 +1,14 @@
 package cmd
 
 import (
-	"github.com/kostikovk/gohooks/lib"
+	"github.com/kostikovk/hooky/lib"
 	"github.com/spf13/cobra"
 )
 
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "Init GoHooks CLI",
-	Long:  `Init GoHooks CLI...`,
+	Short: "Init Hooky CLI",
+	Long:  `Init Hooky CLI...`,
 	Run:   lib.RunInit,
 }
 

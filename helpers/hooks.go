@@ -6,25 +6,25 @@ import (
 	"path/filepath"
 )
 
-var AbsoluteGoHooksPath = getAbsolutePath(".gohooks")
-var AbsoluteGoHooksGitHooksPath = getAbsolutePath(".gohooks/hooks")
+var AbsoluteHookyPath = getAbsolutePath(".hooky")
+var AbsoluteHookyGitHooksPath = getAbsolutePath(".hooky/git-hooks")
 
-// IsGoHooksRepository checks if the current directory is a GoHooks repository.
-func IsGoHooksRepository() bool {
-	return dirExists(AbsoluteGoHooksPath)
+// IsHookyRepository checks if the current directory is a Hooky repository.
+func IsHookyRepository() bool {
+	return dirExists(AbsoluteHookyPath)
 }
 
-// CreateGoHooksGitDirectory creates a .gohooks/git/hooks folder.
-func CreateGoHooksGitDirectory() error {
-	return os.MkdirAll(AbsoluteGoHooksGitHooksPath, 0750)
+// CreateHookyGitDirectory creates a .hooky/ folder.
+func CreateHookyGitDirectory() error {
+	return os.MkdirAll(AbsoluteHookyGitHooksPath, 0750)
 }
 
-// DeleteGoHooksDirectory .gohooks directory
-func DeleteGoHooksDirectory() error {
-	return os.RemoveAll(AbsoluteGoHooksPath)
+// DeleteHookyDirectory .hooky directory
+func DeleteHookyDirectory() error {
+	return os.RemoveAll(AbsoluteHookyPath)
 }
 
-// CreateGitHook creates a GoHooks Git hook.
+// CreateGitHook creates a Hooky Git hook.
 func CreateGitHook(hook string, cmd string) error {
 	// check if hook is valid Git hook.
 	if !GitHookExists(hook) {
@@ -32,7 +32,7 @@ func CreateGitHook(hook string, cmd string) error {
 	}
 
 	// check if GoHooks Git directory exists.
-	files, err := os.ReadDir(AbsoluteGoHooksGitHooksPath)
+	files, err := os.ReadDir(AbsoluteHookyGitHooksPath)
 	if err != nil {
 		return fmt.Errorf("failed to read directory: %w", err)
 	}
@@ -43,7 +43,7 @@ func CreateGitHook(hook string, cmd string) error {
 	}
 
 	// create hook file.
-	file, err := os.Create(filepath.Join(AbsoluteGoHooksGitHooksPath, hook))
+	file, err := os.Create(filepath.Join(AbsoluteHookyGitHooksPath, hook))
 	if err != nil {
 		return fmt.Errorf("failed to create file: %w", err)
 	}
@@ -64,11 +64,11 @@ func CreateGitHook(hook string, cmd string) error {
 
 // InstallHooks installs all GoHooks Git hooks.
 func InstallHooks() error {
-	if !IsGoHooksRepository() {
+	if !IsHookyRepository() {
 		return fmt.Errorf("GoHooks repository not found")
 	}
 
-	hooks, err := os.ReadDir(AbsoluteGoHooksGitHooksPath)
+	hooks, err := os.ReadDir(AbsoluteHookyGitHooksPath)
 	if err != nil {
 		return fmt.Errorf("failed to read directory: %w", err)
 	}
@@ -89,7 +89,7 @@ func InstallHooks() error {
 		}
 
 		err = os.Link(
-			filepath.Join(AbsoluteGoHooksGitHooksPath, hook.Name()),
+			filepath.Join(AbsoluteHookyGitHooksPath, hook.Name()),
 			filepath.Join(AbsoluteGitHooksPath, hook.Name()),
 		)
 		if err != nil {
@@ -104,4 +104,18 @@ func InstallHooks() error {
 	}
 
 	return nil
+}
+
+func ListOfInstalledGitHooks() ([]string, error) {
+	files, err := os.ReadDir(AbsoluteHookyGitHooksPath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to read directory: %w", err)
+	}
+
+	var hooks []string
+	for _, file := range files {
+		hooks = append(hooks, file.Name())
+	}
+
+	return hooks, nil
 }

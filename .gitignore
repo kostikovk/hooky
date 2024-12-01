@@ -30,4 +30,4 @@ out/
 .env
 *.local
 
-# Do not ignore GoHooks specific files (include .gohooks/)
+# Do not ignore Hooky specific files (include .hooky/)
