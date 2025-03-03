@@ -32,19 +32,16 @@ var GitHooks = []string{
 var AbsoluteGitPath = getAbsolutePath(".git")
 var AbsoluteGitHooksPath = getAbsolutePath(".git/hooks")
 
-// GitHookExists checks if a Git hook exists in the GitHooks slice.
 func GitHookExists(hook string) bool {
 	return Contains(GitHooks, func(h string) bool {
 		return h == hook
 	})
 }
 
-// IsGitRepository checks if the current directory is a Git repository.
 func IsGitRepository() bool {
 	return dirExists(AbsoluteGitPath)
 }
 
-// InitGit initializes a Git repository.
 func InitGit() error {
 	cmd := exec.Command("git", "init")
 	err := cmd.Run()
@@ -55,17 +52,14 @@ func InitGit() error {
 	return nil
 }
 
-// PromptToInitGit prompts the user to initialize a Git repository.
 func PromptToInitGit() error {
 	return Prompt("This is not a Git repository. Would you like to initialize it?")
 }
 
-// PromptToCopyGitHooksToHooky prompts the user to copy Git hooks to Hooky repository.
 func PromptToCopyGitHooksToHooky() error {
 	return Prompt("Would you like to copy Git hooks to Hooky repository?")
 }
 
-// DeleteGitHooksDirectory .git/hooks folder with all its contents.
 func DeleteGitHooksDirectory() error {
 	return os.RemoveAll(AbsoluteGitHooksPath)
 }

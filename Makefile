@@ -1,6 +1,8 @@
 # Define the name of the binary
 BINARY_NAME := hooky
 
+GO := go1.24.0
+
 # Define the default target
 .PHONY: all
 all: build
@@ -8,12 +10,12 @@ all: build
 # Build the application
 .PHONY: build
 build:
-	CGO_ENABLED=0 go build -ldflags="-s -w" -o bin/$(BINARY_NAME)
+	CGO_ENABLED=0 $(GO) build -ldflags="-s -w" -o bin/$(BINARY_NAME)
 
 # Run tests
 .PHONY: test
 test:
-	go test -v ./...
+	$(GO) test -v ./...
 
 # Clean build artifacts
 .PHONY: clean
@@ -29,8 +31,8 @@ run: build
 # Format code
 .PHONY: fmt
 fmt:
-	go fmt ./...
-	go mod tidy
+	$(GO) fmt ./...
+	$(GO) mod tidy
 
 # Lint code
 .PHONY: lint
@@ -54,12 +56,12 @@ static-analysis: lint vet
 # Vet code
 .PHONY: vet
 vet:
-	go vet ./...
+	$(GO) vet ./...
 
 # Tidy go.mod and go.sum
 .PHONY: tidy
 tidy:
-	go mod tidy
+	$(GO) mod tidy
 
 # Pre commit hook
 # todo: need to add security later and fix the issues

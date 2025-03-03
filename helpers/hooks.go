@@ -9,7 +9,6 @@ import (
 var AbsoluteHookyPath = getAbsolutePath(".hooky")
 var AbsoluteHookyGitHooksPath = getAbsolutePath(".hooky/git-hooks")
 
-// IsHookyRepository checks if the current directory is a Hooky repository.
 func IsHookyRepository() bool {
 	return dirExists(AbsoluteHookyPath)
 }
@@ -18,19 +17,15 @@ func HasGitHooksDirectory() bool {
 	return dirExists(AbsoluteHookyGitHooksPath)
 }
 
-// CreateHookyGitDirectory creates a .hooky/ folder.
 func CreateHookyGitDirectory() error {
 	return os.MkdirAll(AbsoluteHookyGitHooksPath, 0750)
 }
 
-// DeleteHookyDirectory .hooky directory
 func DeleteHookyDirectory() error {
 	return os.RemoveAll(AbsoluteHookyPath)
 }
 
-// CreateGitHook creates a Hooky Git hook.
 func CreateGitHook(hook string, cmd string) error {
-	// check if Hooky repository exists.
 	if !IsHookyRepository() {
 		fmt.Println("Hooky repository not found")
 		fmt.Println("Please, do 'hooky init' to create a Hooky repository")
@@ -45,23 +40,19 @@ func CreateGitHook(hook string, cmd string) error {
 		return fmt.Errorf("git hooks directory not found in Hooky repository '.hooky/git-hooks'")
 	}
 
-	// check if hook is valid Git hook.
 	if !GitHookExists(hook) {
 		return fmt.Errorf("invalid Git hook: %s", hook)
 	}
 
-	// check if Hooky Git directory exists.
 	files, err := os.ReadDir(AbsoluteHookyGitHooksPath)
 	if err != nil {
 		return fmt.Errorf("failed to read directory: %w", err)
 	}
 
-	// check if hook already exists.
 	if ContainsFile(files, hook) {
 		return fmt.Errorf("hook already exists: %s", hook)
 	}
 
-	// create hook file.
 	file, err := os.Create(filepath.Join(AbsoluteHookyGitHooksPath, hook))
 	if err != nil {
 		return fmt.Errorf("failed to create file: %w", err)
@@ -81,7 +72,6 @@ func CreateGitHook(hook string, cmd string) error {
 	return nil
 }
 
-// InstallHooks installs all GoHooks Git hooks.
 func InstallHooks() error {
 	if !IsHookyRepository() {
 		return fmt.Errorf("GoHooks repository not found")
@@ -107,7 +97,7 @@ func InstallHooks() error {
 			continue
 		}
 
-		err = os.Link(
+		err = os.Symlink(
 			filepath.Join(AbsoluteHookyGitHooksPath, hook.Name()),
 			filepath.Join(AbsoluteGitHooksPath, hook.Name()),
 		)
@@ -115,7 +105,6 @@ func InstallHooks() error {
 			return fmt.Errorf("failed to link file: %w", err)
 		}
 
-		// make hook executable.
 		err = os.Chmod(filepath.Join(AbsoluteGitHooksPath, hook.Name()), 0750)
 		if err != nil {
 			return fmt.Errorf("failed to change file permissions: %w", err)
