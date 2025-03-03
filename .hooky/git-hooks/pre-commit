@@ -1,3 +1,5 @@
 #!/bin/sh
 
 make pre-commit
+
+echo "pre-commit hook ran successfully"
