@@ -49,7 +49,7 @@ func InitGit() error {
 	cmd := exec.Command("git", "init")
 	err := cmd.Run()
 	if err != nil {
-		return fmt.Errorf("Failed to initialize Git repository: %w", err)
+		return fmt.Errorf("failed to initialize Git repository: %w", err)
 	}
 
 	return nil

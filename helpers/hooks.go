@@ -35,14 +35,14 @@ func CreateGitHook(hook string, cmd string) error {
 		fmt.Println("Hooky repository not found")
 		fmt.Println("Please, do 'hooky init' to create a Hooky repository")
 
-		return fmt.Errorf("Hooky repository not found")
+		return fmt.Errorf("hooky repository not found")
 	}
 
 	if !HasGitHooksDirectory() {
 		fmt.Println("Git hooks directory not found in Hooky repository '.hooky/git-hooks'")
 		fmt.Println("Please, do 'hooky uninstall' and 'hooky init' to create a Hooky repository again")
 
-		return fmt.Errorf("Git hooks directory not found in Hooky repository '.hooky/git-hooks'")
+		return fmt.Errorf("git hooks directory not found in Hooky repository '.hooky/git-hooks'")
 	}
 
 	// check if hook is valid Git hook.
