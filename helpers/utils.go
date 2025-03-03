@@ -57,5 +57,5 @@ func Prompt(prompt string) error {
 		return nil
 	}
 
-	return fmt.Errorf(response)
+	return fmt.Errorf("user response: %s", response)
 }
