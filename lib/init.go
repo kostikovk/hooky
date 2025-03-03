@@ -2,6 +2,7 @@ package lib
 
 import (
 	"os"
+	"sync"
 
 	"github.com/kostikovk/hooky/helpers"
 	"github.com/spf13/cobra"
@@ -61,9 +62,32 @@ func initHooky() error {
 		return err
 	}
 
-	err = helpers.CreateGitHook("pre-commit", "echo 'Hey 👋, Hooky!'")
-	if err != nil {
-		return err
+	var wg sync.WaitGroup
+	errors := make(chan error, 2)
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		if err := helpers.CreateGitHook("pre-commit", "echo 'Hey 👋, Hooky!'"); err != nil {
+			errors <- err
+		}
+	}()
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		if err := helpers.CreateGitHook("post-checkout", "hooky init"); err != nil {
+			errors <- err
+		}
+	}()
+
+	wg.Wait()
+	close(errors)
+
+	for err := range errors {
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil

@@ -1,5 +1,5 @@
-#!/bin/bash
+#!/bin/sh
 
 make pre-commit
 
-echo "Hooky: pre-commit hook ran successfully ✅"
+echo 'Hey 👋, Hooky!'
