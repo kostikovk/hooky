@@ -1,7 +1,7 @@
 # Define the name of the binary
 BINARY_NAME := hooky
 
-GO := go1.24.0
+GO ?= go
 
 # Define the default target
 .PHONY: all
