@@ -7,28 +7,41 @@ import (
 	"strings"
 )
 
-var AbsoluteHookyPath = getAbsolutePath(".hooky")
-var AbsoluteHookyGitHooksPath = getAbsolutePath(".hooky/git-hooks")
-
 type InstallOptions struct {
 	Force  bool
 	Backup bool
 }
 
 func IsHookyRepository() bool {
-	return dirExists(AbsoluteHookyPath)
+	hookyPath, err := getHookyPath()
+	if err != nil {
+		return false
+	}
+	return dirExists(hookyPath)
 }
 
 func HasGitHooksDirectory() bool {
-	return dirExists(AbsoluteHookyGitHooksPath)
+	hookyGitHooksPath, err := getHookyGitHooksPath()
+	if err != nil {
+		return false
+	}
+	return dirExists(hookyGitHooksPath)
 }
 
 func CreateHookyGitDirectory() error {
-	return os.MkdirAll(AbsoluteHookyGitHooksPath, 0750)
+	hookyGitHooksPath, err := getHookyGitHooksPath()
+	if err != nil {
+		return err
+	}
+	return os.MkdirAll(hookyGitHooksPath, 0750)
 }
 
 func DeleteHookyDirectory() error {
-	return os.RemoveAll(AbsoluteHookyPath)
+	hookyPath, err := getHookyPath()
+	if err != nil {
+		return err
+	}
+	return os.RemoveAll(hookyPath)
 }
 
 func CreateGitHook(hook string, cmd string) error {
@@ -58,7 +71,12 @@ func writeGitHook(hook string, cmd string, allowOverwrite bool) error {
 		return fmt.Errorf("invalid Git hook: %s", hook)
 	}
 
-	target := filepath.Join(AbsoluteHookyGitHooksPath, hook)
+	hookyGitHooksPath, err := getHookyGitHooksPath()
+	if err != nil {
+		return err
+	}
+
+	target := filepath.Join(hookyGitHooksPath, hook)
 	if !allowOverwrite && exists(target) {
 		return fmt.Errorf("hook already exists: %s", hook)
 	}
@@ -76,16 +94,30 @@ func writeGitHook(hook string, cmd string, allowOverwrite bool) error {
 }
 
 func InstallHooks(options InstallOptions) error {
-	if !IsHookyRepository() {
-		return fmt.Errorf("GoHooks repository not found")
+	if !IsGitRepository() {
+		return fmt.Errorf("git repository not found")
 	}
 
-	hooks, err := os.ReadDir(AbsoluteHookyGitHooksPath)
+	if !IsHookyRepository() {
+		return fmt.Errorf("hooky repository not found")
+	}
+
+	hookyGitHooksPath, err := getHookyGitHooksPath()
+	if err != nil {
+		return err
+	}
+
+	hooks, err := os.ReadDir(hookyGitHooksPath)
 	if err != nil {
 		return fmt.Errorf("failed to read directory: %w", err)
 	}
 
-	err = os.MkdirAll(AbsoluteGitHooksPath, 0750)
+	gitHooksPath, err := getGitHooksPath()
+	if err != nil {
+		return err
+	}
+
+	err = os.MkdirAll(gitHooksPath, 0750)
 	if err != nil {
 		return fmt.Errorf("failed to create Git hooks directory: %w", err)
 	}
@@ -96,8 +128,8 @@ func InstallHooks(options InstallOptions) error {
 			continue
 		}
 
-		source := filepath.Join(AbsoluteHookyGitHooksPath, hook.Name())
-		target := filepath.Join(AbsoluteGitHooksPath, hook.Name())
+		source := filepath.Join(hookyGitHooksPath, hook.Name())
+		target := filepath.Join(gitHooksPath, hook.Name())
 
 		if shouldReplace, err := shouldReplaceHookTarget(target, source); err != nil {
 			return err
@@ -190,7 +222,12 @@ func exists(path string) bool {
 }
 
 func ListOfInstalledGitHooks() ([]string, error) {
-	files, err := os.ReadDir(AbsoluteHookyGitHooksPath)
+	hookyGitHooksPath, err := getHookyGitHooksPath()
+	if err != nil {
+		return nil, err
+	}
+
+	files, err := os.ReadDir(hookyGitHooksPath)
 	if err != nil {
 		return nil, fmt.Errorf("failed to read directory: %w", err)
 	}

@@ -2,8 +2,8 @@ package helpers
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
+	"slices"
 )
 
 // GitHooks List of Git hooks.
@@ -29,17 +29,18 @@ var GitHooks = []string{
 	"update",
 }
 
-var AbsoluteGitPath = getAbsolutePath(".git")
-var AbsoluteGitHooksPath = getAbsolutePath(".git/hooks")
-
 func GitHookExists(hook string) bool {
-	return Contains(GitHooks, func(h string) bool {
+	return slices.ContainsFunc(GitHooks, func(h string) bool {
 		return h == hook
 	})
 }
 
 func IsGitRepository() bool {
-	return dirExists(AbsoluteGitPath)
+	if AbsoluteGitPath != "" {
+		return dirExists(AbsoluteGitPath)
+	}
+	_, err := gitTopLevel()
+	return err == nil
 }
 
 func InitGit() error {
@@ -54,12 +55,4 @@ func InitGit() error {
 
 func PromptToInitGit() error {
 	return Prompt("This is not a Git repository. Would you like to initialize it?")
-}
-
-func PromptToCopyGitHooksToHooky() error {
-	return Prompt("Would you like to copy Git hooks to Hooky repository?")
-}
-
-func DeleteGitHooksDirectory() error {
-	return os.RemoveAll(AbsoluteGitHooksPath)
 }
