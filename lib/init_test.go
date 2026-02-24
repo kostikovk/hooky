@@ -94,3 +94,38 @@ func TestRunInitReturnsInstallError(t *testing.T) {
 		t.Fatalf("expected errors.Is(..., installErr) to be true, got %v", err)
 	}
 }
+
+func TestInitHookyCreatesOnlyDefaultPreCommitHook(t *testing.T) {
+	origIsHookyRepository := isHookyRepository
+	origCreateHookyGitDir := createHookyGitDir
+	origCreateGitHookInRepo := createGitHookInRepo
+	t.Cleanup(func() {
+		isHookyRepository = origIsHookyRepository
+		createHookyGitDir = origCreateHookyGitDir
+		createGitHookInRepo = origCreateGitHookInRepo
+	})
+
+	isHookyRepository = func() bool { return false }
+	createHookyGitDir = func() error { return nil }
+
+	type hookCall struct {
+		hook string
+		cmd  string
+	}
+	var calls []hookCall
+	createGitHookInRepo = func(hook, command string) error {
+		calls = append(calls, hookCall{hook: hook, cmd: command})
+		return nil
+	}
+
+	if err := initHooky(); err != nil {
+		t.Fatalf("initHooky failed: %v", err)
+	}
+
+	if len(calls) != 1 {
+		t.Fatalf("expected exactly one default hook, got %d", len(calls))
+	}
+	if calls[0].hook != "pre-commit" {
+		t.Fatalf("expected default hook to be pre-commit, got %q", calls[0].hook)
+	}
+}

@@ -27,7 +27,7 @@ func RunDoctor(cmd *cobra.Command, args []string) error {
 	}
 
 	if isHookyRepository() && !hasHookyHooksDirectory() {
-		issues = append(issues, "Hooky hooks directory not found (.hooky/git-hooks)")
+		issues = append(issues, "Hooky hooks directory not found (.hooky/hooks)")
 	}
 
 	if len(issues) > 0 {
@@ -67,7 +67,7 @@ func RunDoctor(cmd *cobra.Command, args []string) error {
 func isHookInstalledAndManaged(hook string) (bool, string) {
 	hookyGitHooksPath, err := helpers.HookyGitHooksPath()
 	if err != nil {
-		return false, fmt.Sprintf("%s: cannot resolve .hooky/git-hooks path: %v", hook, err)
+		return false, fmt.Sprintf("%s: cannot resolve .hooky/hooks path: %v", hook, err)
 	}
 
 	gitHooksPath, err := helpers.GitHooksPath()
@@ -100,7 +100,7 @@ func isHookInstalledAndManaged(hook string) (bool, string) {
 	}
 
 	if filepath.Clean(link) != filepath.Clean(source) {
-		return false, fmt.Sprintf("%s: symlink points outside .hooky/git-hooks", hook)
+		return false, fmt.Sprintf("%s: symlink points outside .hooky/hooks", hook)
 	}
 
 	return true, ""

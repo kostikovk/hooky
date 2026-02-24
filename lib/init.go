@@ -79,9 +79,5 @@ func initHooky() error {
 		return err
 	}
 
-	if err := createGitHookInRepo("post-checkout", "hooky init"); err != nil {
-		return err
-	}
-
 	return nil
 }

@@ -8,7 +8,7 @@ import (
 var addCmd = &cobra.Command{
 	Use:   "add [hook] [command]",
 	Short: "Add or update a Git hook command",
-	Long:  `Add or update a Git hook script in .hooky/git-hooks, then sync it into .git/hooks.`,
+	Long:  `Add or update a Git hook script in .hooky/hooks, then sync it into .git/hooks.`,
 	Args:  cobra.MinimumNArgs(2),
 	RunE:  lib.RunAdd,
 }

@@ -68,7 +68,7 @@ func getHookyGitHooksPath() (string, error) {
 		return "", err
 	}
 
-	return filepath.Join(hookyPath, "git-hooks"), nil
+	return filepath.Join(hookyPath, "hooks"), nil
 }
 
 func getGitPath() (string, error) {

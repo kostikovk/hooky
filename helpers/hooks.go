@@ -61,10 +61,10 @@ func writeGitHook(hook string, cmd string, allowOverwrite bool) error {
 	}
 
 	if !HasGitHooksDirectory() {
-		fmt.Println("Git hooks directory not found in Hooky repository '.hooky/git-hooks'")
+		fmt.Println("Git hooks directory not found in Hooky repository '.hooky/hooks'")
 		fmt.Println("Please, do 'hooky uninstall' and 'hooky init' to create a Hooky repository again")
 
-		return fmt.Errorf("git hooks directory not found in Hooky repository '.hooky/git-hooks'")
+		return fmt.Errorf("git hooks directory not found in Hooky repository '.hooky/hooks'")
 	}
 
 	if !GitHookExists(hook) {

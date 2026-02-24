@@ -133,7 +133,7 @@ func setupDoctorTestState(t *testing.T) func() {
 
 	root := t.TempDir()
 	helpers.AbsoluteHookyPath = filepath.Join(root, ".hooky")
-	helpers.AbsoluteHookyGitHooksPath = filepath.Join(root, ".hooky", "git-hooks")
+	helpers.AbsoluteHookyGitHooksPath = filepath.Join(root, ".hooky", "hooks")
 	helpers.AbsoluteGitPath = filepath.Join(root, ".git")
 	helpers.AbsoluteGitHooksPath = filepath.Join(root, ".git", "hooks")
 

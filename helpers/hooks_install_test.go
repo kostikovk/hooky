@@ -113,12 +113,12 @@ func useTestPaths(t *testing.T, root string) func() {
 	origGitHooksPath := AbsoluteGitHooksPath
 
 	AbsoluteHookyPath = filepath.Join(root, ".hooky")
-	AbsoluteHookyGitHooksPath = filepath.Join(root, ".hooky", "git-hooks")
+	AbsoluteHookyGitHooksPath = filepath.Join(root, ".hooky", "hooks")
 	AbsoluteGitPath = filepath.Join(root, ".git")
 	AbsoluteGitHooksPath = filepath.Join(root, ".git", "hooks")
 
 	if err := os.MkdirAll(AbsoluteHookyGitHooksPath, 0o750); err != nil {
-		t.Fatalf("create .hooky/git-hooks: %v", err)
+		t.Fatalf("create .hooky/hooks: %v", err)
 	}
 	if err := os.MkdirAll(AbsoluteGitHooksPath, 0o750); err != nil {
 		t.Fatalf("create .git/hooks: %v", err)

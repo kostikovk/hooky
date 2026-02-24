@@ -2,6 +2,8 @@
 BINARY_NAME := hooky
 
 GO ?= go
+VERSION ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo dev)
+LDFLAGS ?= -s -w -X github.com/kostikovk/hooky/cmd.Version=$(VERSION)
 
 # Define the default target
 .PHONY: all
@@ -10,7 +12,7 @@ all: build
 # Build the application
 .PHONY: build
 build:
-	CGO_ENABLED=0 $(GO) build -ldflags="-s -w" -o bin/$(BINARY_NAME)
+	CGO_ENABLED=0 $(GO) build -ldflags="$(LDFLAGS)" -o bin/$(BINARY_NAME)
 
 # Run tests
 .PHONY: test
@@ -85,3 +87,6 @@ help:
 	@echo "  tidy               - Tidy go.mod and go.sum"
 	@echo "  pre-commit         - Run pre-commit checks (fmt, lint, vet, build, test, security)"
 	@echo "  help               - Show this help message"
+	@echo ""
+	@echo "Build vars:"
+	@echo "  VERSION            - Version passed via -ldflags (default: git describe)"

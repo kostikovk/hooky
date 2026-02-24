@@ -5,7 +5,9 @@ import (
 )
 
 // Version is the version of the CLI.
-const Version string = "v1.0.1"
+// It can be overridden at build time:
+// go build -ldflags="-X github.com/kostikovk/hooky/cmd.Version=vX.Y.Z"
+var Version = "dev"
 
 var versionCmd = &cobra.Command{
 	Use:   "version",

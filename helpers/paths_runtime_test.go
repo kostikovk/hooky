@@ -31,7 +31,7 @@ func TestCreateHookyGitDirectoryUsesGitRootFromSubdirectory(t *testing.T) {
 		t.Fatalf("CreateHookyGitDirectory failed: %v", err)
 	}
 
-	expected := filepath.Join(repo, ".hooky", "git-hooks")
+	expected := filepath.Join(repo, ".hooky", "hooks")
 	if !dirExists(expected) {
 		t.Fatalf("expected hook directory at repo root: %s", expected)
 	}
@@ -44,7 +44,7 @@ func TestInstallHooksDoesNotCreateFakeGitDirectory(t *testing.T) {
 	workdir := t.TempDir()
 	t.Chdir(workdir)
 
-	_ = os.MkdirAll(filepath.Join(workdir, ".hooky", "git-hooks"), 0o750)
+	_ = os.MkdirAll(filepath.Join(workdir, ".hooky", "hooks"), 0o750)
 
 	err := InstallHooks(InstallOptions{})
 	if err == nil {
