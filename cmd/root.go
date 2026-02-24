@@ -8,22 +8,21 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "hooky",
-	Short: "Hooky CLI",
-	Long:  `Hooky CLI helps you to work with git hooks easily.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		err := cmd.Help()
-		if err != nil {
-			panic(err)
-		}
+	Use:           "hooky",
+	Short:         "Hooky CLI",
+	Long:          `Hooky CLI helps you to work with git hooks easily.`,
+	SilenceErrors: true,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		return cmd.Help()
 	},
+	Version: Version,
 }
 
 func init() {}
 
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		fmt.Fprintln(os.Stderr, err)
 
 		os.Exit(1)
 	}

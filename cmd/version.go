@@ -1,33 +1,21 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
 )
 
 // Version is the version of the CLI.
-const Version string = "v1.0.0"
+const Version string = "v1.0.1"
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "Display version information",
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		cmd.Println(Version)
+		return nil
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(versionCmd)
-	rootCmd.PersistentFlags().BoolP("version", "v", false, "Version information")
-
-	cobra.OnInitialize(checkVersionFlag)
-}
-
-func checkVersionFlag() {
-	if v, err := rootCmd.Flags().GetBool("version"); err == nil && v {
-		fmt.Println(Version)
-		os.Exit(0)
-	}
 }

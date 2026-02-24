@@ -1,93 +1,86 @@
 package lib
 
 import (
-	"os"
-	"sync"
+	"fmt"
 
 	"github.com/kostikovk/hooky/helpers"
 	"github.com/spf13/cobra"
 )
 
-func RunInit(cmd *cobra.Command, args []string) {
+var (
+	isGitRepository     = helpers.IsGitRepository
+	promptToInitGit     = helpers.PromptToInitGit
+	initGitRepository   = helpers.InitGit
+	isHookyRepository   = helpers.IsHookyRepository
+	createHookyGitDir   = helpers.CreateHookyGitDirectory
+	createGitHookInRepo = helpers.CreateGitHook
+	installHooksInGit   = helpers.InstallHooks
+)
+
+func RunInit(cmd *cobra.Command, args []string) error {
 	cmd.Println("Initializing GoHooks...")
 
-	var err error
-
-	err = initGit(cmd)
-	if err != nil {
-		cmd.Println("Error initializing Git repository.")
-
-		os.Exit(1)
+	if err := initGit(cmd); err != nil {
+		return fmt.Errorf("error initializing Git repository: %w", err)
 	}
 
-	err = initHooky()
-	if err != nil {
-		cmd.Println("Error initializing GoHooks repository.")
-
-		os.Exit(1)
+	if err := initHooky(); err != nil {
+		return fmt.Errorf("error initializing GoHooks repository: %w", err)
 	}
 
-	err = helpers.InstallHooks()
+	force, err := cmd.Flags().GetBool("force")
 	if err != nil {
-		cmd.Println("Error installing hooks.")
+		return fmt.Errorf("error reading --force flag: %w", err)
+	}
 
-		os.Exit(1)
+	backup, err := cmd.Flags().GetBool("backup")
+	if err != nil {
+		return fmt.Errorf("error reading --backup flag: %w", err)
+	}
+
+	if err := installHooksInGit(helpers.InstallOptions{
+		Force:  force,
+		Backup: backup,
+	}); err != nil {
+		return fmt.Errorf("error installing hooks: %w", err)
 	}
 
 	cmd.Println("Hooky initialized 🎉")
+	return nil
 }
 
 func initGit(cmd *cobra.Command) error {
-	if helpers.IsGitRepository() {
+	if isGitRepository() {
 		return nil
 	}
 
-	err := helpers.PromptToInitGit()
-	if err != nil {
-		cmd.Println("Error initializing Git repository.")
-
+	if err := promptToInitGit(); err != nil {
 		return err
 	}
 
+	if err := initGitRepository(); err != nil {
+		return err
+	}
+
+	cmd.Println("Git repository initialized.")
 	return nil
 }
 
 func initHooky() error {
-	if helpers.IsHookyRepository() {
+	if isHookyRepository() {
 		return nil
 	}
 
-	err := helpers.CreateHookyGitDirectory()
-	if err != nil {
+	if err := createHookyGitDir(); err != nil {
 		return err
 	}
 
-	var wg sync.WaitGroup
-	errors := make(chan error, 2)
+	if err := createGitHookInRepo("pre-commit", "echo 'Hey 👋, Hooky!'"); err != nil {
+		return err
+	}
 
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		if err := helpers.CreateGitHook("pre-commit", "echo 'Hey 👋, Hooky!'"); err != nil {
-			errors <- err
-		}
-	}()
-
-	wg.Add(1)
-	go func() {
-		defer wg.Done()
-		if err := helpers.CreateGitHook("post-checkout", "hooky init"); err != nil {
-			errors <- err
-		}
-	}()
-
-	wg.Wait()
-	close(errors)
-
-	for err := range errors {
-		if err != nil {
-			return err
-		}
+	if err := createGitHookInRepo("post-checkout", "hooky init"); err != nil {
+		return err
 	}
 
 	return nil

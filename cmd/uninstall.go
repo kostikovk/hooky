@@ -9,7 +9,7 @@ var uninstallCmd = &cobra.Command{
 	Use:   "uninstall",
 	Short: "Uninstall Hooky CLI",
 	Long:  `Uninstall Hooky CLI...`,
-	Run:   lib.RunUninstall,
+	RunE:  lib.RunUninstall,
 }
 
 func init() {

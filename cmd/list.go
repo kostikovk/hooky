@@ -9,7 +9,7 @@ var listCmd = &cobra.Command{
 	Use:   "list",
 	Short: "List all available hooks",
 	Long:  `List all available hooks.`,
-	Run:   lib.RunList,
+	RunE:  lib.RunList,
 }
 
 func init() {

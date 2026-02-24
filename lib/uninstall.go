@@ -1,29 +1,33 @@
 package lib
 
 import (
+	"fmt"
+
 	"github.com/kostikovk/hooky/helpers"
 	"github.com/spf13/cobra"
 )
 
-func RunUninstall(cmd *cobra.Command, args []string) {
-	err := hookyUninstallHandler(cmd)
-	if err != nil {
-		cmd.Println("Error uninstalling GoHooks.")
+var (
+	isHookyRepo    = helpers.IsHookyRepository
+	deleteHookyDir = helpers.DeleteHookyDirectory
+)
+
+func RunUninstall(cmd *cobra.Command, args []string) error {
+	if err := hookyUninstallHandler(); err != nil {
+		return fmt.Errorf("uninstall failed: %w", err)
 	}
 
 	cmd.Println("Hooky uninstalled 🥺")
+	return nil
 }
 
-func hookyUninstallHandler(cmd *cobra.Command) error {
-	if !helpers.IsHookyRepository() {
+func hookyUninstallHandler() error {
+	if !isHookyRepo() {
 		return nil
 	}
 
-	err := helpers.DeleteHookyDirectory()
-	if err != nil {
-		cmd.Println("Error deleting GoHooks repository.")
-
-		return err
+	if err := deleteHookyDir(); err != nil {
+		return fmt.Errorf("error deleting GoHooks repository: %w", err)
 	}
 
 	return nil
