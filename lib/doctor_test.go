@@ -68,6 +68,36 @@ func TestRunDoctorDetectsMissingHookInstall(t *testing.T) {
 	}
 }
 
+func TestRunDoctorIgnoresNonHookFilesInHookyDirectory(t *testing.T) {
+	restore := setupDoctorTestState(t)
+	defer restore()
+
+	isGitRepository = func() bool { return true }
+	isHookyRepository = func() bool { return true }
+	hasHookyHooksDirectory = func() bool { return true }
+	listHookyHooks = func() ([]string, error) {
+		return []string{"pre-commit", "README.md", "tmp-file"}, nil
+	}
+
+	source := filepath.Join(helpers.AbsoluteHookyGitHooksPath, "pre-commit")
+	target := filepath.Join(helpers.AbsoluteGitHooksPath, "pre-commit")
+	writeFile(t, source, "#!/bin/sh\necho test\n")
+	if err := symlink(source, target); err != nil {
+		t.Fatalf("create symlink: %v", err)
+	}
+
+	cmd := &cobra.Command{}
+	out := bytes.NewBuffer(nil)
+	cmd.SetOut(out)
+
+	if err := RunDoctor(cmd, nil); err != nil {
+		t.Fatalf("expected nil error, got %v", err)
+	}
+	if !strings.Contains(out.String(), "Doctor check passed") {
+		t.Fatalf("unexpected output: %q", out.String())
+	}
+}
+
 func TestRunDoctorDetectsRepoIssues(t *testing.T) {
 	restore := setupDoctorTestState(t)
 	defer restore()

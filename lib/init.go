@@ -18,14 +18,14 @@ var (
 )
 
 func RunInit(cmd *cobra.Command, args []string) error {
-	cmd.Println("Initializing GoHooks...")
+	cmd.Println("Initializing Hooky...")
 
 	if err := initGit(cmd); err != nil {
 		return fmt.Errorf("error initializing Git repository: %w", err)
 	}
 
 	if err := initHooky(); err != nil {
-		return fmt.Errorf("error initializing GoHooks repository: %w", err)
+		return fmt.Errorf("error initializing Hooky repository: %w", err)
 	}
 
 	force, err := cmd.Flags().GetBool("force")

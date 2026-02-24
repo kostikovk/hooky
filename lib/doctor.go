@@ -44,6 +44,11 @@ func RunDoctor(cmd *cobra.Command, args []string) error {
 		if hook == "" {
 			continue
 		}
+
+		if !helpers.GitHookExists(hook) {
+			continue
+		}
+
 		ok, issue := isHookInstalledAndManaged(hook)
 		if !ok {
 			issues = append(issues, issue)
@@ -60,8 +65,18 @@ func RunDoctor(cmd *cobra.Command, args []string) error {
 }
 
 func isHookInstalledAndManaged(hook string) (bool, string) {
-	source := filepath.Join(helpers.AbsoluteHookyGitHooksPath, hook)
-	target := filepath.Join(helpers.AbsoluteGitHooksPath, hook)
+	hookyGitHooksPath, err := helpers.HookyGitHooksPath()
+	if err != nil {
+		return false, fmt.Sprintf("%s: cannot resolve .hooky/git-hooks path: %v", hook, err)
+	}
+
+	gitHooksPath, err := helpers.GitHooksPath()
+	if err != nil {
+		return false, fmt.Sprintf("%s: cannot resolve .git/hooks path: %v", hook, err)
+	}
+
+	source := filepath.Join(hookyGitHooksPath, hook)
+	target := filepath.Join(gitHooksPath, hook)
 
 	info, err := os.Lstat(target)
 	if os.IsNotExist(err) {

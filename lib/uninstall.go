@@ -27,7 +27,7 @@ func hookyUninstallHandler() error {
 	}
 
 	if err := deleteHookyDir(); err != nil {
-		return fmt.Errorf("error deleting GoHooks repository: %w", err)
+		return fmt.Errorf("error deleting Hooky repository: %w", err)
 	}
 
 	return nil
