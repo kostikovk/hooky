@@ -31,7 +31,38 @@ To install a specific hook, run the following command:
 hooky install pre-commit
 ```
 This command installs the `pre-commit` hook in your Git repository.
-If it's already installed, it will overwrite the existing hook.
+If a conflicting hook already exists in `.git/hooks`, Hooky stops and reports it (non-destructive by default).
+Use `--force` to replace conflicting hooks and `--backup` (enabled by default) to keep backups:
+
+```bash
+hooky install pre-commit --force --backup
+```
+
+## Husky-like add command
+To add or update a hook with a custom command:
+
+```bash
+hooky add pre-commit "go test ./..."
+```
+
+This writes the hook script to `.hooky/git-hooks/pre-commit` and syncs it into `.git/hooks`.
+If `.git/hooks/pre-commit` already exists and conflicts, use:
+
+```bash
+hooky add pre-commit "go test ./..." --force --backup
+```
+
+## Doctor command
+To verify Hooky installation and hook wiring:
+
+```bash
+hooky doctor
+```
+
+`doctor` checks:
+- `.git` exists
+- `.hooky` and `.hooky/git-hooks` exist
+- each Hooky hook is installed in `.git/hooks` as a symlink to `.hooky/git-hooks`
 
 ## Contributing
 Contributions are welcome! To contribute:
